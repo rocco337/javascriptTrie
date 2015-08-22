@@ -1,106 +1,99 @@
-function trieSearch(){
-	var self = this;
+function trieSearch() {
+    var self = this;
 
-	//internal class for holding trie nodes
-	function nodeClass(value){
-		var self = this;
-		
-		self.value = value;				
-		self.children=[];
-	};
+    //internal class for holding trie nodes
+    function nodeClass(value) {
+        var self = this;
 
-	//inititate root node
-	self.root = new nodeClass('');
-	self.lastSearchResult = [];
+        self.value = value;
+        self.children = [];
+    };
 
-	//adds new value to the trie
-	self.add = function(term,parent){		
-		if(!parent)
-			parent = self.root;
+    //inititate root node
+    self.root = new nodeClass('');
+    self.lastSearchResult = [];
 
-		//iterate troguh every character and create structure
-		for(var ii=0;ii<term.length;ii++)
-		{
-			//try to find nodewith current value
-			var node = parent.children.filter(function(m){
-				return m.value===term[ii];
-			});
+    //adds new value to the trie
+    self.add = function(term, parent) {
+        if (!parent)
+            parent = self.root;
 
-			node = node ? node[0] : undefined;
+        //iterate troguh every character and create structure
+        for (var ii = 0; ii < term.length; ii++) {
+            //try to find nodewith current value
+            var node = parent.children.filter(function(m) {
+                return m.value === term[ii];
+            });
 
-			//insert new node if node with current value doesn't exist
-			if(!node){
-				node = new nodeClass(term[ii]);
-				parent.children.push(node);
-			}
+            node = node ? node[0] : undefined;
 
-			parent = node;			
-		}
-	};
+            //insert new node if node with current value doesn't exist
+            if (!node) {
+                node = new nodeClass(term[ii]);
+                parent.children.push(node);
+            }
 
-	self.search = function(term,parent){
-		//convert to lowercase. This makes search case insensitive
-		term = term.toLowerCase();
+            parent = node;
+        }
+    };
 
-		if(!parent)
-			parent = self.root;
+    self.search = function(term, parent) {
+        //convert to lowercase. This makes search case insensitive
+        term = term.toLowerCase();
 
-		//if search term is not provided then no values are returned
-		if(!term)
-			return;
+        if (!parent)
+            parent = self.root;
 
-		//find end part of search term
-		for(var ii=0;ii<term.length;ii++){
-	      parent = parent.children.filter(function(m){
-	      	 return m.value.toLowerCase() == term[ii];
-	      });
+        //if search term is not provided then no values are returned
+        if (!term)
+            return;
 
-		  parent = parent ? parent[0] : undefined;
+        //find end part of search term
+        for (var ii = 0; ii < term.length; ii++) {
+            parent = parent.children.filter(function(m) {
+                return m.value.toLowerCase() == term[ii];
+            });
 
-	      if (!parent) return null;
-	    }
+            parent = parent ? parent[0] : undefined;
 
-	    return parent;
-	};
+            if (!parent) return null;
+        }
 
-	self.searchWords= function(term,parent){
-		if(!parent)
-			parent = self.root;
+        return parent;
+    };
 
-		var top = self.search(term,parent);
-		if(!top)
-			return [];
+    self.searchWords = function(term, parent) {
+        if (!parent)
+            parent = self.root;
 
-		var words =[];		
-		function getWords(parent,word){
-			word +=parent.value;
+        var top = self.search(term, parent);
+        if (!top)
+            return [];
 
-			parent.children.forEach(function (child){
-				getWords(child,word);
-			});
+        var words = [];
 
-			if(!parent.children.length)
-				words.push(word);
-		};
+        function getWords(parent, word) {
+            word += parent.value;
 
-		top.children.forEach(function (node) {
-	      getWords(node,term);
-	    });
-	    
-		self.lastSearchResult = words;
-	    return words;
-	};	
+            parent.children.forEach(function(child) {
+                getWords(child, word);
+            });
 
-	self.autoComplete = function() {
-		return self.lastSearchResult ? self.lastSearchResult[0] : [];
-	};
+            if (!parent.children.length)
+                words.push(word);
+        };
 
-	addTestData(self);
+        top.children.forEach(function(node) {
+            getWords(node, term);
+        });
+
+        self.lastSearchResult = words;
+        return words;
+    };
+
+    self.autoComplete = function() {
+        return self.lastSearchResult ? self.lastSearchResult[0] : [];
+    };
+
+    addTestData(self);
 };
-
-
-
-
-
-
-
