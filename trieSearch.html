@@ -1,0 +1,44 @@
+<p>City name</p>
+<input type="text">
+<br/>
+<small>* press TAB to autocomplete</small>
+<br/>
+<small>* 4491 cities in DB</small>
+
+<div id='results'>
+
+</div>
+<script src="trieTestData.js"></script>
+<script src="trieSearch.js"></script>
+
+<script type="text/javascript">
+var trie = getTrie();
+
+var input = document.querySelector('input');
+var results = document.querySelector('#results');
+
+input.addEventListener('keyup', function() {
+  results.innerHTML = '';
+
+  var nodes = trie.searchWords(input.value);
+  if (!nodes.length) return; 
+
+  for (var ii=0;ii<nodes.length;ii++) {
+    results.innerHTML += '<li>' + nodes[ii] + '</li>';
+  }
+});
+
+input.addEventListener('keydown', function(e){
+  // Tab Key
+  if (e.keyCode === 9) {
+    e.preventDefault();
+    var lastResult = trie.autoComplete();
+
+    if (!lastResult) return;
+
+    input.value = lastResult;
+  }
+});
+
+</script>
+
