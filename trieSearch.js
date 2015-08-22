@@ -93,17 +93,11 @@ function trieSearch(){
 
 	self.autoComplete = function() {
 		return self.lastSearchResult ? self.lastSearchResult[0] : [];
-	}
+	};
+
+	addTestData(self);
 };
 
-trie = new trieSearch();
-
-addTestData(trie);
-
-function getTrie()
-{
-	return trie;
-}
 
 
 
